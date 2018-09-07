@@ -25,6 +25,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.lang.reflect.Field;
 
+import static com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT;
+
 public class QRScanActivity extends AppCompatActivity {
 
     private SurfaceView cameraView;
@@ -97,7 +99,7 @@ public class QRScanActivity extends AppCompatActivity {
 
     private void camera() {
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
+                .setAutoFocusEnabled(true).setFacing(CAMERA_FACING_FRONT)
                 .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
