@@ -17,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -25,6 +26,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.lang.reflect.Field;
 
+import static com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK;
 import static com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT;
 
 public class QRScanActivity extends AppCompatActivity {
@@ -150,6 +152,7 @@ public class QRScanActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
