@@ -2,8 +2,13 @@ package com.coffee.qrcodescanner.Camera;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -31,6 +36,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.coffee.qrcodescanner.R;
@@ -41,14 +47,74 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static android.app.Activity.RESULT_OK;
+
 public class cameraActivity extends AppCompatActivity {
 
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    Canvas canvas;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_camera);
+        this.imageView = (ImageView)this.findViewById(R.id.imageView);
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+        Button photoButton = (Button) this.findViewById(R.id.btnCapture);
+        photoButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
+    }
+    private Bitmap timestampItAndSave(Bitmap toEdit){
+        Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), Bitmap.Config.ARGB_8888);
+//        Bitmap dest = Bitmap.createBitmap(toEdit,2,2,toEdit.getWidth(),toEdit.getHeight());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTime = sdf.format(Calendar.getInstance().getTime()); // reading local time in the system
+
+        Canvas cs = new Canvas(dest);
+        Paint tPaint = new Paint();
+        tPaint.setTextSize(10);
+        tPaint.setColor(Color.BLUE);
+        tPaint.setStyle(Paint.Style.FILL);
+        float height = tPaint.measureText("yY");
+        cs.drawText(dateTime, 20f, height+15f, tPaint);
+        try {
+            dest.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/timestamped")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return dest;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            Bitmap photo1= timestampItAndSave(photo);
+            imageView.setImageBitmap(photo1);
+
+
+        }
+    }
 
 /*
     private Button btnCapture;

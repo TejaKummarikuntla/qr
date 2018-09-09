@@ -23,8 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".QRScanActivity" />
-        <activity android:name=".ListActivityPack.ListActivity" />
-        <activity android:name=".Camera.cameraActivity"></activity>
+        <activity android:name=".ListActivityPack.ListActivity" android:parentActivityName=".MainActivity" />
+        <activity android:name=".Camera.cameraActivity" android:parentActivityName=".MainActivity"></activity>
 
 
         <provider
@@ -36,7 +36,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
-
 
 
 
